@@ -1,0 +1,29 @@
+@charset "utf-8";
+/*view-source:*/
+body {
+  color: #fffff0;
+  background-color: #010101;
+  margin: 10%;
+/*
+color: #000000
+background: antiquewhite;
+*/
+}
+nav {
+  background-color: #333;
+  padding: 25px;
+  border-radius: 25px 25px 25px 25px / 25px 25px 25px 25px;
+}
+a:link { color: #8080ff; }
+a:visited { color: #8080ff; }
+a:hover { color: #ff0000; }
+a:active { color: #ff8000; }
+a.nm {color:#fffff0;}
+a {color:#fffff0; text-decoration:none}
+h1 {font-size:120%;text-align:center;}
+h2 {
+  font-size:100%;
+  background-color: #a00;
+  padding:0.5ex;
+}
+p {text-indent: 1em; font-size:90%;}
