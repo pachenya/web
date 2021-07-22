@@ -27,13 +27,23 @@ app.view.setAttribute("height",
   apH);
 if (IS_SMAPHO) {
   let w = window.innerWidth-5;
-  let h = window.innerWidth-5;
+  let h = window.innerHeight-5;
+  if (w > h) {
+    w = h;
+  } else if (h > w) {
+    h = w;
+  }
   app.view.style.width = w + "px";
   app.view.style.height = h + "px";
   app.view.style.margin = "auto";
 } else {
   let w = window.innerWidth-5;
-  let h = window.innerWidth-5;
+  let h = window.innerHeight-5;
+  if (w > h) {
+    w = h;
+  } else if (h > w) {
+    h = w;
+  }
   app.view.style.width = String(w) + "px";
   app.view.style.height = String(h) + "px";
   app.view.style.margin = "auto";
