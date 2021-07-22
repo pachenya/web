@@ -1,11 +1,6 @@
 const DEBUGOPT = 1;
 const apW = 128, apH = 128;
 let IS_SMAPHO = 0;
-let key1, key2;
-
-let TextureCache = PIXI.utils.TextureCache;
-let Rectangle = PIXI.Rectangle;
-let Sprite = PIXI.Sprite;
 
 const app = new PIXI.Application(
   {
@@ -14,11 +9,13 @@ const app = new PIXI.Application(
     antialiasing: false,
     transparent: false,
     resolution: 1
+    // resizeTo: window
   }
 );
 
 document.body.appendChild(app.view);
 
+// window.innerWidth
 if (isSma()) {
   IS_SMAPHO = 1;
 } else {
@@ -29,18 +26,26 @@ app.view.setAttribute("width",
 app.view.setAttribute("height",
   apH);
 if (IS_SMAPHO) {
-  let w = apW*2;
-  let h = apH*2;
+  let w = window.innerWidth-5;
+  let h = window.innerWidth-5;
   app.view.style.width = w + "px";
   app.view.style.height = h + "px";
   app.view.style.margin = "auto";
 } else {
-  let w = apW * 3;
-  let h = apH * 3;
+  let w = window.innerWidth-5;
+  let h = window.innerWidth-5;
   app.view.style.width = String(w) + "px";
   app.view.style.height = String(h) + "px";
   app.view.style.margin = "auto";
 }
+
+//
+// Game
+//
+let TextureCache = PIXI.utils.TextureCache;
+let Rectangle = PIXI.Rectangle;
+let Sprite = PIXI.Sprite;
+let key1, key2;
 
 const MUKI_L = 0, MUKI_R = 1;
 const N_BXS = 8, N_BYS = 20;
