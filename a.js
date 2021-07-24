@@ -56,9 +56,11 @@ let TextureCache = PIXI.utils.TextureCache;
 let Rectangle = PIXI.Rectangle;
 let Sprite = PIXI.Sprite;
 let key1, key2;
+let scoreText;
+let score = 0, score_height = 0;
 
 const MUKI_L = 0, MUKI_R = 1;
-const N_BXS = 8, N_BYS = 20;
+const N_BXS = 8, N_BYS = 100;
 
 let p, prect, gameScene, id;
 let jumpcnt = 0, jumpMax = 2;
@@ -136,7 +138,6 @@ function setup() {
     }
   });
 
-
   for (let i = 0; i < N_BTXES; i++) {
     let tmpr = new Rectangle((4+i)*16, 8*16, 16, 16);
     let tmpt = new PIXI.Texture(texture, tmpr);
@@ -178,6 +179,15 @@ function setup() {
   p.pictnum = 0;
   p.frmcnt = 0;
   p.frm = 0;
+  score_height = Math.floor(N_BYS-2 - (p.levely / 16));
+  const style = new PIXI.TextStyle({
+    dropShadow: true,
+    fill: "white",
+    fontVariant: "small-caps",
+    fontSize: 16
+  });
+  scoreText = new PIXI.Text('Score: 00000', style);
+  app.stage.addChild(scoreText);
 
   startup_it();
 }
@@ -217,6 +227,13 @@ function gPlay(delta) {
   const pVYMax = 11;
   if (p.vy > pVYMax) {
     p.vy = pVYMax;
+  }
+
+  // count_score
+  let tmpple = Math.floor(N_BYS-2 - (p.levely / 16));
+  if (tmpple > score_height) {
+    score = tmpple;
+    score_height = tmpple;
   }
 
   const pJPY = -2.2,
@@ -279,6 +296,9 @@ function gPlay(delta) {
     p.pictnum = p.pictnum + 20;
   }
   plidx2sp(p.pictnum);
+
+  let tmp = ('00000' + String(score)).slice(-5);
+  scoreText.text = 'Score: ' + tmp;
 }
 
 function pjump(vx, vy) {
@@ -382,11 +402,17 @@ function bidx_to_blo_xy(x, y, idx) {
 
 function build_map() {
   for (let i = 0; i < N_BYS; i++) {
+    let flgnoblo = true,
+    flgnoblocnt = 0;
     for (let j = 0; j < N_BXS; j++) {
       // XXX
       let val = true;
       if (rn0(100) < 25) {
         val = true;
+        flgnoblo = false;
+        if (i < N_BYS/2) {
+          bidx_to_blo_xy(j, i, 4);
+        }
       } else {
         val = false;
       }
@@ -395,6 +421,13 @@ function build_map() {
         bidx_to_blo_xy(j, i, 1);
       }
       blo[i][j].visible = val;
+    }
+    if (flgnoblo) {
+      flgnoblocnt++;
+      if (flgnoblocnt >= 2) {
+        flgnoblocnt = 0;
+        i--;
+      }
     }
   }
 }
