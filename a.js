@@ -57,7 +57,9 @@ let Rectangle = PIXI.Rectangle;
 let Sprite = PIXI.Sprite;
 let key1, key2;
 let scoreText;
+let msgText;
 let score = 0, score_height = 0;
+let msgCnt = 0;
 
 const MUKI_L = 0, MUKI_R = 1;
 const N_BXS = 8, N_BYS = 100;
@@ -73,8 +75,10 @@ for (let y = 0; y < N_BYS; y++) {
     blo[y][x] = 0;
   }
 }
-const N_BTXES = 5;
+const N_BTXES = 5, N_ITENUM = 13;
 let bloTexture = [], blo_idx = [];
+let iteTexture = [], ite_idx = [];
+let item = [];
 
 let bol = false;
 
@@ -87,14 +91,12 @@ const loader = PIXI.Loader.shared;
 loader
 .add('pictitle', 'title.png')
 .add('pic01', 'pacma_tohka.png')
-.add('pic02', 'demonettae.png')
+.add('pic02', 'neko01.png')
 .load(setup);
 
 // Load sounds
 const sLoader = new PIXI.Loader();
-sLoader.add('s_jump',
-  'se_jump_short.mp3').add('s_bgm01',
-  'sht_a02.mp3');
+sLoader.add('s_jump', 'se_jump_short.mp3').add('s_bgm01', 'sht_a02.mp3').add('coin', 'se_coinget_1.mp3');
 sLoader.load(function(loader, resources) {
   //resources.s_bgm01.sound.play({
   //  loop: true, singleInstance: true
@@ -115,7 +117,7 @@ function setup() {
   secondTexture = TextureCache['pic02'];
 
   // create a new Sprite using the texture
-  dude = new PIXI.Sprite(texture);
+  dude = new PIXI.Sprite(secondTexture);
   dude.scale.x = 0.5;
   dude.scale.y = 0.5;
 
@@ -127,19 +129,6 @@ function setup() {
   dude.y = app.screen.height / 2;
 
   app.stage.addChild(dude);
-
-  // make the sprite interactive
-  dude.interactive = true;
-  dude.buttonMode = true;
-
-  dude.on('pointertap', () => {
-    bol = !bol;
-    if (bol) {
-      dude.texture = secondTexture;
-    } else {
-      dude.texture = texture;
-    }
-  });
 
   for (let i = 0; i < N_BTXES; i++) {
     let tmpr = new Rectangle((4+i)*16, 8*16, 16, 16);
@@ -161,6 +150,22 @@ function setup() {
     }
   }
   build_map();
+
+  for (let i = 0; i < N_ITENUM; i++) {
+    let tmpr = new Rectangle((i+5)*16, 11*16, 16, 16);
+    let tmpt = new PIXI.Texture(texture, tmpr);
+    iteTexture.push(tmpt);
+  }
+  let tmpr1 = new Rectangle(5*16, 11*16, 16, 16);
+  iteTexture.frame = tmpr1;
+  for (let i = 0; i < N_ITENUM; i++) {
+    let itmp = new Sprite(iteTexture[i]);
+    item.push(itmp);
+    app.stage.addChild(itmp);
+    itmp.ly = (2 + rn0(N_BYS - 4) * 16);
+    itmp.lx = rn0(N_BXS)*16;
+    itmp.visible = true;
+  }
 
   prect = new Rectangle(0,
     0,
@@ -187,7 +192,7 @@ function setup() {
     dropShadow: true,
     fill: "white",
     fontVariant: "small-caps",
-    fontSize: 16
+    fontSize: 10
   });
   scoreText = new PIXI.Text('Score: 00000', style);
   app.stage.addChild(scoreText);
@@ -197,9 +202,33 @@ function setup() {
   titlegamen = new Sprite(titleTexture);
   app.stage.addChild(titlegamen);
 
+  const styleMsg = new PIXI.TextStyle({
+    fill: "white",
+    fontVariant: "small-caps",
+    fontSize: 10
+  });
+  msgText = new PIXI.Text('Hello.', styleMsg);
+  app.stage.addChild(msgText);
+  msgText.position.x = 1;
+  msgText.position.y = 20;
+
   dprt('setup end.')
 
   startup_it();
+}
+
+function addmsg(s) {
+  msgText.text = s;
+  msgCnt = 60*5;
+  msgText.visible = true;
+}
+function do_msg() {
+  if (msgCnt > 0) {
+    msgCnt--;
+    if (msgCnt <= 0) {
+      msgText.visible = false;
+    }
+  }
 }
 
 let startCnt = 0;
@@ -230,17 +259,25 @@ function gameLoop(delta) {
 }
 
 function gTitle() {
+  if (startCnt < 2) {
+    key2 = 0;
+    key1 = 0;
+    return;
+  }
   if (key2) {
     PIXI.sound.play('s_bgm01', {
       loop: true, singleInstance: true
     });
+    key1 = 0;
+    key2 = 0;
     state = gPlay;
     titlegamen.visible = false;
   }
 }
 function gPlay(delta) {
   do_stars();
-  dude.rotation += 0.1;
+  do_msg();
+  //dude.rotation += 0.1;
 
   let flag_p_jumping = true;
   p.vy += 0.1;
@@ -252,8 +289,25 @@ function gPlay(delta) {
   // count_score
   let tmpple = Math.floor(N_BYS-2 - (p.levely / 16));
   if (tmpple > score_height) {
-    score = tmpple;
+    score += (tmpple - score_height)*10;
     score_height = tmpple;
+  }
+
+  // itemhitcheck
+  for (let i = 0; i < N_ITENUM; i++) {
+    let itmp = item[i];
+    if (!itmp.visible) {
+      continue;
+    }
+    let x1 = p.x + 4,
+    x2 = p.x + 12;
+    if (x1 + 4 < itmp.lx+16 && x2 > itmp.lx &&
+      p.levely +16 > itmp.ly && p.levely < itmp.ly + 16) {
+      itmp.visible = false;
+      score += 100;
+      addmsg('You got item.');
+      PIXI.sound.play('coin');
+    }
   }
 
   const pJPY = -2.2,
@@ -373,6 +427,14 @@ function do_camera_blo() {
   }
 }
 
+function do_camera_ite() {
+  for (let i = 0; i < N_ITENUM; i++) {
+    itmp = item[i];
+    itmp.y = itmp.ly -pCameraY;
+    itmp.x = itmp.lx;
+  }
+}
+
 function do_camera() {
   pCameraY = p.levely - apH/2+16;
   if (pCameraY > (N_BYS)*16 - apH) {
@@ -380,6 +442,7 @@ function do_camera() {
   }
   p.y = p.levely - pCameraY;
   do_camera_blo();
+  do_camera_ite();
 }
 
 const N_STARS = 50;
@@ -425,9 +488,15 @@ function build_map() {
     let flgnoblo = true,
     flgnoblocnt = 0;
     for (let j = 0; j < N_BXS; j++) {
-      // XXX
+      //XXX
       let val = true;
-      if (rn0(100) < 25) {
+      let perc = 15;
+      if (i >= (N_BYS * 2) / 3) {
+        prec = 20;
+      } else if (i <= (N_BYS * 1) / 3) {
+        prec = 10;
+      }
+      if (rn0(100) < perc) {
         val = true;
         flgnoblo = false;
         if (i < N_BYS/2) {
@@ -444,7 +513,7 @@ function build_map() {
     }
     if (flgnoblo) {
       flgnoblocnt++;
-      if (flgnoblocnt >= 2) {
+      if (flgnoblocnt >= 1) {
         flgnoblocnt = 0;
         i--;
       }
