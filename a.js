@@ -78,12 +78,14 @@ let bloTexture = [], blo_idx = [];
 
 let bol = false;
 
-let texture, secondTexture;
+let texture, secondTexture, titleTexture;
 let dude;
+let titlegamen;
 const loader = PIXI.Loader.shared;
 
 // Load images
 loader
+.add('pictitle', 'title.png')
 .add('pic01', 'pacma_tohka.png')
 .add('pic02', 'demonettae.png')
 .load(setup);
@@ -94,9 +96,9 @@ sLoader.add('s_jump',
   'se_jump_short.mp3').add('s_bgm01',
   'sht_a02.mp3');
 sLoader.load(function(loader, resources) {
-  resources.s_bgm01.sound.play({
-    loop: true, singleInstance: true
-  });
+  //resources.s_bgm01.sound.play({
+  //  loop: true, singleInstance: true
+  //});
   startup_it();
   //sLoader.onComplete.add();
 });
@@ -106,6 +108,7 @@ function setup() {
 
   add_stars();
 
+  titleTexture = TextureCache['pictitle'];
   // texture = PIXI.Texture.from('pic01');
   texture = TextureCache['pic01'];
   // create a second texture
@@ -189,6 +192,13 @@ function setup() {
   scoreText = new PIXI.Text('Score: 00000', style);
   app.stage.addChild(scoreText);
 
+  // titlegamen
+  dprt('setup title.')
+  titlegamen = new Sprite(titleTexture);
+  app.stage.addChild(titlegamen);
+
+  dprt('setup end.')
+
   startup_it();
 }
 
@@ -201,7 +211,8 @@ function startup_it() {
   }
   addEventListener("pointerdown", onClick);
   // mainloop
-  state = gPlay;
+  state = gTitle;
+  // state = gPlay;
   app.ticker.add(delta => gameLoop(delta));
 }
 
@@ -218,6 +229,15 @@ function gameLoop(delta) {
   state(delta);
 }
 
+function gTitle() {
+  if (key2) {
+    PIXI.sound.play('s_bgm01', {
+      loop: true, singleInstance: true
+    });
+    state = gPlay;
+    titlegamen.visible = false;
+  }
+}
 function gPlay(delta) {
   do_stars();
   dude.rotation += 0.1;
