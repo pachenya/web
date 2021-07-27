@@ -58,13 +58,15 @@ let Sprite = PIXI.Sprite;
 let key1, key2;
 let scoreText;
 let msgText;
+let clcText;
 let score = 0, score_height = 0;
 let msgCnt = 0;
+let theClock = 0;
 
 const MUKI_L = 0, MUKI_R = 1;
 const N_BXS = 8, N_BYS = 100;
 
-let p, prect, gameScene, id;
+let p, prect, gameScene, id, teki;
 let jumpcnt = 0, jumpMax = 2;
 let baseTexture, pTexture;
 let pCameraY = N_BYS*16 - 100;
@@ -80,10 +82,8 @@ let bloTexture = [], blo_idx = [];
 let iteTexture = [], ite_idx = [];
 let item = [];
 
-let bol = false;
-
-let texture, secondTexture, titleTexture;
-let dude;
+let texture, secondTexture, titleTexture, tekiTexture, endTexture, endingTexture;
+let endPict, endPF;
 let titlegamen;
 const loader = PIXI.Loader.shared;
 
@@ -91,19 +91,25 @@ const loader = PIXI.Loader.shared;
 loader
 .add('pictitle', 'title.png')
 .add('pic01', 'pacma_tohka.png')
-.add('pic02', 'neko01.png')
+.add('picend', 'picend.png')
+.add('endingpict', 'endingpict.png')
+.add('enemy', 'teki.png')
 .load(setup);
 
 // Load sounds
 const sLoader = new PIXI.Loader();
-sLoader.add('s_jump', 'se_jump_short.mp3').add('s_bgm01', 'sht_a02.mp3').add('coin', 'se_coinget_1.mp3');
-sLoader.load(function(loader, resources) {
-  //resources.s_bgm01.sound.play({
-  //  loop: true, singleInstance: true
-  //});
+sLoader
+.add('s_jump', 'se_jump_short.mp3')
+.add('s_bgm01', 'sht_a02.mp3')
+.add('s_ending', 'arasuji_08.mp3')
+.add('coin', 'se_coinget_1.mp3')
+.add('s_hissatsu', 'se_zusyunzusyun.mp3')
+.load(sndLoaded);
+
+function sndLoaded() {
+  dprt('snd setup end.')
   startup_it();
-  //sLoader.onComplete.add();
-});
+}
 
 function setup() {
   dprt('setup.')
@@ -114,22 +120,9 @@ function setup() {
   // texture = PIXI.Texture.from('pic01');
   texture = TextureCache['pic01'];
   // create a second texture
-  secondTexture = TextureCache['pic02'];
-
-  // create a new Sprite using the texture
-  dude = new PIXI.Sprite(secondTexture);
-  dude.scale.x = 0.5;
-  dude.scale.y = 0.5;
-
-  // center the sprites anchor point
-  dude.anchor.set(0.5);
-
-  // move the sprite to the center of the screen
-  dude.x = app.screen.width / 2;
-  dude.y = app.screen.height / 2;
-
-  app.stage.addChild(dude);
-
+  tekiTexture = TextureCache['enemy'];
+  endTexture = TextureCache['picend'];
+  endingTexture = TextureCache['endingpict'];
   for (let i = 0; i < N_BTXES; i++) {
     let tmpr = new Rectangle((4+i)*16, 8*16, 16, 16);
     let tmpt = new PIXI.Texture(texture, tmpr);
@@ -162,7 +155,7 @@ function setup() {
     let itmp = new Sprite(iteTexture[i]);
     item.push(itmp);
     app.stage.addChild(itmp);
-    itmp.ly = (2 + rn0(N_BYS - 4) * 16);
+    itmp.ly = (2 + rn0(N_BYS - 4)) * 16;
     itmp.lx = rn0(N_BXS)*16;
     itmp.visible = true;
   }
@@ -180,21 +173,33 @@ function setup() {
   p.x = apW/2;
   p.y = 128 - 16 - 1;
   p.oldy = p.y;
-  p.levely = N_BYS * 16 - 16;
+  p.ly = N_BYS * 16 - 16;
   p.vx = 0;
   p.vy = 0;
   p.muki = MUKI_L;
   p.pictnum = 0;
   p.frmcnt = 0;
   p.frm = 0;
-  score_height = Math.floor(N_BYS-2 - (p.levely / 16));
-  const style = new PIXI.TextStyle({
+  score_height = Math.floor(N_BYS-2 - (p.ly / 16));
+
+  teki = new Sprite(tekiTexture);
+  app.stage.addChild(teki);
+  teki.ly = -20;
+  teki.lx = apW/2 - 8;
+  teki.y = -16;
+  teki.x = teki.lx;
+
+  const styleScore = new PIXI.TextStyle({
     dropShadow: true,
-    fill: "white",
-    fontVariant: "small-caps",
-    fontSize: 10
+    dropShadowDistance: 1,
+    fill: [
+      "white",
+      "lime"
+    ],
+    fontSize: 10,
+    fontVariant: "small-caps"
   });
-  scoreText = new PIXI.Text('Score: 00000', style);
+  scoreText = new PIXI.Text('Score: 00000', styleScore);
   app.stage.addChild(scoreText);
 
   // titlegamen
@@ -202,15 +207,34 @@ function setup() {
   titlegamen = new Sprite(titleTexture);
   app.stage.addChild(titlegamen);
 
+  endPict = new Sprite(endTexture);
+  app.stage.addChild(endPict);
+  endPict.scale.x = 0.5;
+  endPict.scale.y = 0.5;
+  endPict.visible = false;
+
+  endPF = new Sprite(endingTexture);
+  app.stage.addChild(endPF);
+  endPF.visible = false;
+
   const styleMsg = new PIXI.TextStyle({
-    fill: "white",
-    fontVariant: "small-caps",
-    fontSize: 10
+    dropShadow: true,
+    dropShadowDistance: 1,
+    fill: [
+      "white",
+      "lime"
+    ],
+    fontSize: 10,
+    fontVariant: "small-caps"
   });
-  msgText = new PIXI.Text('Hello.', styleMsg);
+  msgText = new PIXI.Text('Loadong...', styleMsg);
   app.stage.addChild(msgText);
   msgText.position.x = 1;
-  msgText.position.y = 20;
+  msgText.position.y = 95;
+  clcText = new PIXI.Text('', styleMsg);
+  app.stage.addChild(clcText);
+  clcText.position.x = 1;
+  clcText.position.y = 95+10;
 
   dprt('setup end.')
 
@@ -239,9 +263,9 @@ function startup_it() {
     return;
   }
   addEventListener("pointerdown", onClick);
+  addEventListener("keydown", gkFunc);
   // mainloop
   state = gTitle;
-  // state = gPlay;
   app.ticker.add(delta => gameLoop(delta));
 }
 
@@ -258,27 +282,103 @@ function gameLoop(delta) {
   state(delta);
 }
 
+function init_ender() {
+  addmsg('F.P.B. !!');
+  endPict.visible = true;
+  teki.visible = false;
+  p.visible = false;
+  score += 3333;
+  for (let i = 0; i < N_ITENUM; i++) {
+    item[i].visible = false;
+  }
+  for (let i = 0; i < N_BYS-2; i++) {
+    for (let j = 0; j < N_BXS; j++) {
+      blo[i][j].visible = false;
+    }
+  }
+  PIXI.sound.stop('s_bgm01');
+}
+
+function gEnding() {
+  do_stars(1);
+  msgText.text = 'Thanks for Playing!';
+  let tmp = ('00000' + String(score)).slice(-5);
+  scoreText.text = 'Score: ' + tmp;
+  msgText.visible = true;
+}
+
+let enderClock = 0;
+const ENDTIME = 60*5;
+const GOTO_END_TIME = 60 * 8;
+function gEnder() {
+  do_msg();
+  if (enderClock < GOTO_END_TIME) {
+    enderClock++;
+    switch (enderClock) {
+      case 60*1:
+        addmsg('- Final -');
+        break;
+      case 60*2:
+        addmsg('- Russian -');
+        break;
+      case 60*3:
+        addmsg('-- Buster!!! --');
+        break;
+      case ENDTIME:
+        PIXI.sound.play('s_hissatsu');
+        break;
+      case ENDTIME+5:
+        PIXI.sound.play('s_hissatsu');
+        break;
+      case ENDTIME+10:
+        PIXI.sound.play('s_hissatsu');
+        break;
+    }
+    if (enderClock >= ENDTIME) {
+      do_stars(1);
+      endPict.y = 0;
+      endPict.x = 0;
+      endPict.y += rn0(11) - 5;
+      endPict.x += rn0(7) - 3;
+    } else {
+      do_stars(-1);
+    }
+  } else if (enderClock == GOTO_END_TIME) {
+    endPict.visible = false;
+    endPF.visible = true;
+    state = gEnding;
+    let toptions = {
+      loop: true,
+      singleInstance: true
+    };
+    PIXI.sound.play('s_ending', toptions);
+  }
+}
+
 function gTitle() {
   if (startCnt < 2) {
     key2 = 0;
     key1 = 0;
     return;
+  } else {
+    msgText.text = 'Tap to Start';
   }
-  if (key2) {
-    PIXI.sound.play('s_bgm01', {
-      loop: true, singleInstance: true
-    });
+  if (key2 || key1) {
+    let toptions = {
+      loop: true,
+      singleInstance: true
+    };
+    PIXI.sound.play('s_bgm01', toptions);
+
     key1 = 0;
     key2 = 0;
     state = gPlay;
+    addmsg("Let us go");
     titlegamen.visible = false;
   }
 }
-function gPlay(delta) {
-  do_stars();
-  do_msg();
-  //dude.rotation += 0.1;
 
+function gPlay(delta) {
   let flag_p_jumping = true;
   p.vy += 0.1;
   const pVYMax = 11;
@@ -287,7 +387,7 @@ function gPlay(delta) {
   }
 
   // count_score
-  let tmpple = Math.floor(N_BYS-2 - (p.levely / 16));
+  let tmpple = Math.floor(N_BYS-2 - (p.ly / 16));
   if (tmpple > score_height) {
     score += (tmpple - score_height)*10;
     score_height = tmpple;
@@ -302,12 +402,21 @@ function gPlay(delta) {
     let x1 = p.x + 4,
     x2 = p.x + 12;
     if (x1 + 4 < itmp.lx+16 && x2 > itmp.lx &&
-      p.levely +16 > itmp.ly && p.levely < itmp.ly + 16) {
+      p.ly +16 > itmp.ly && p.ly < itmp.ly + 16) {
       itmp.visible = false;
       score += 100;
-      addmsg('You got item.');
+      addmsg("You've got item.");
       PIXI.sound.play('coin');
     }
+  }
+
+  // endcheck
+  if (p.ly < teki.ly + 16 && p.x < teki.lx + 16 && p.x + 16 > teki.lx) {
+    // endgame
+    init_ender();
+    state = gEnder;
+    dprt('end')
+    return;
   }
 
   const pJPY = -2.2,
@@ -320,10 +429,10 @@ function gPlay(delta) {
     pjump(pJPX, pJPY);
   }
   p.x += p.vx;
-  p.levely += p.vy;
-  if (p.levely > (N_BYS-2) * 16) {
+  p.ly += p.vy;
+  if (p.ly > (N_BYS-2) * 16) {
     p.vy = 0;
-    p.levely = (N_BYS-2) * 16;
+    p.ly = (N_BYS-2) * 16;
     jumpcnt = 0;
     flag_p_jumping = false;
   }
@@ -343,7 +452,7 @@ function gPlay(delta) {
       flag_p_jumping = false;
     }
   }
-  p.oldy = p.levely;
+  p.oldy = p.ly;
   do_camera();
 
   // pictnum
@@ -373,6 +482,13 @@ function gPlay(delta) {
 
   let tmp = ('00000' + String(score)).slice(-5);
   scoreText.text = 'Score: ' + tmp;
+
+  theClock++;
+  let tmp_minute = ('000' + String(Math.floor((theClock / 60)/60))).slice(-3);
+  let tmp_sec = ('00' + String(Math.floor(theClock / 60)%60)).slice(-2);
+  clcText.text = 'T:' + tmp_minute + ':' + tmp_sec;
+  do_stars(1);
+  do_msg();
 }
 
 function pjump(vx, vy) {
@@ -388,7 +504,7 @@ function p_hit_blo(w = 12, h = 16) {
   if (p.vy < 0) {
     return 0;
   }
-  let tNextY = p.levely + h;
+  let tNextY = p.ly + h;
   let tBloOldY = p.oldy + h - 0.0001;
   let tBloY = Math.floor(tNextY / 16);
   if (tBloY < 0 || tBloY >= N_BYS) {
@@ -407,7 +523,7 @@ function p_hit_blo(w = 12, h = 16) {
     }
     if (x*16 < x2 && x*16+16 > x1) {
       let yy = tBloY * 16 - h;
-      p.levely = yy;
+      p.ly = yy;
       p.vy = 0;
       return 1;
     }
@@ -416,7 +532,7 @@ function p_hit_blo(w = 12, h = 16) {
 }
 
 function do_p_up(sa) {
-  p.levely -= sa;
+  p.ly -= sa;
 }
 
 function do_camera_blo() {
@@ -425,6 +541,7 @@ function do_camera_blo() {
       blo[y][x].y = -pCameraY+16*(y);
     }
   }
+  teki.y = teki.ly - pCameraY;
 }
 
 function do_camera_ite() {
@@ -436,11 +553,11 @@ function do_camera_ite() {
 }
 
 function do_camera() {
-  pCameraY = p.levely - apH/2+16;
+  pCameraY = p.ly - apH/2+16;
   if (pCameraY > (N_BYS)*16 - apH) {
     pCameraY = (N_BYS)*16 - apH;
   }
-  p.y = p.levely - pCameraY;
+  p.y = p.ly - pCameraY;
   do_camera_blo();
   do_camera_ite();
 }
@@ -465,15 +582,24 @@ function add_stars() {
   }
 }
 
-function do_stars() {
+function do_stars(n) {
   for (let i = 0; i < stars.length; i++) {
     let m = stars[i];
     if (m) {
-      m.g.y += m.vy;
-      if (m.g.y >= apH + 10) {
-        m.g.x = Math.random()*apW-0.1;
-        m.vy = Math.random()*2+0.7;
-        m.g.y = 0;
+      if (n > 0) {
+        m.g.y += m.vy;
+        if (m.g.y >= apH + 10) {
+          m.g.x = Math.random()*apW-0.1;
+          m.vy = Math.random()*2+0.7;
+          m.g.y = 0;
+        }
+      } else {
+        m.g.y -= m.vy * 3;
+        if (m.g.y < -1) {
+          m.g.x = Math.random()*apW-0.1;
+          m.vy = Math.random()*2+0.7;
+          m.g.y = apH+2;
+        }
       }
     }
   }
@@ -563,6 +689,21 @@ function onClick(e) {
     key2 = 1;
     // jumpChara(3);
   }
+}
+
+function gkFunc(e) {
+  switch (e.code) {
+    case 'KeyA':
+      key1 = 1;
+      break;
+    case 'KeyD':
+      key2 = 1;
+      break;
+    // case 'KeyO':
+    //   dprt('pCameraY: ' + Math.floor(pCameraY) + '; p.y: ' + Math.floor(p.y) + '; p.ly: ' + Math.floor(p.ly));
+    //   break;
+  }
+  dprt('keycode == ' + e.code);
 }
 
 function isSma() {
