@@ -405,7 +405,7 @@ function gPlay(delta) {
       p.ly +16 > itmp.ly && p.ly < itmp.ly + 16) {
       itmp.visible = false;
       score += 100;
-      addmsg("You've got item.");
+      addmsg("You've got an item.");
       PIXI.sound.play('coin');
     }
   }
