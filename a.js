@@ -299,8 +299,15 @@ function init_ender() {
   PIXI.sound.stop('s_bgm01');
 }
 
+let endingClc = 0;
 function gEnding() {
   do_stars(1);
+  endingClc++;
+  let i = (227-apH) - Math.floor(endingClc/5);
+  if (i < 0) {
+    i = 0;
+  }
+  endPF.y = -i;
   msgText.text = 'Thanks for Playing!';
   let tmp = ('00000' + String(score)).slice(-5);
   scoreText.text = 'Score: ' + tmp;
