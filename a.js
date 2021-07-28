@@ -189,19 +189,6 @@ function setup() {
   teki.y = -16;
   teki.x = teki.lx;
 
-  const styleScore = new PIXI.TextStyle({
-    dropShadow: true,
-    dropShadowDistance: 1,
-    fill: [
-      "white",
-      "lime"
-    ],
-    fontSize: 10,
-    fontVariant: "small-caps"
-  });
-  scoreText = new PIXI.Text('Score: 00000', styleScore);
-  app.stage.addChild(scoreText);
-
   // titlegamen
   dprt('setup title.')
   titlegamen = new Sprite(titleTexture);
@@ -216,6 +203,19 @@ function setup() {
   endPF = new Sprite(endingTexture);
   app.stage.addChild(endPF);
   endPF.visible = false;
+
+  const styleScore = new PIXI.TextStyle({
+    dropShadow: true,
+    dropShadowDistance: 1,
+    fill: [
+      "white",
+      "lime"
+    ],
+    fontSize: 10,
+    fontVariant: "small-caps"
+  });
+  scoreText = new PIXI.Text('Score: 00000', styleScore);
+  app.stage.addChild(scoreText);
 
   const styleMsg = new PIXI.TextStyle({
     dropShadow: true,
