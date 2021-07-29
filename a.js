@@ -77,7 +77,7 @@ for (let y = 0; y < N_BYS; y++) {
     blo[y][x] = 0;
   }
 }
-const N_BTXES = 5, N_ITENUM = 13;
+const N_BTXES = 5, N_ITENUM = 25;
 let bloTexture = [], blo_idx = [];
 let iteTexture = [], ite_idx = [];
 let item = [];
@@ -144,13 +144,24 @@ function setup() {
   }
   build_map();
 
+  function get_ite_rect(i) {
+    let rval = new Rectangle(0, 0, 16, 16);
+    if (i <= 11) {
+      rval.y = 10*16;
+      rval.x = (i+8)*16;
+    } else {
+      rval.y = 11*16;
+      rval.x = (i-11+5)*16;
+    }
+    dprt(rval);
+    return rval;
+  }
+
   for (let i = 0; i < N_ITENUM; i++) {
-    let tmpr = new Rectangle((i+5)*16, 11*16, 16, 16);
+    let tmpr = get_ite_rect(i);
     let tmpt = new PIXI.Texture(texture, tmpr);
     iteTexture.push(tmpt);
   }
-  let tmpr1 = new Rectangle(5*16, 11*16, 16, 16);
-  iteTexture.frame = tmpr1;
   for (let i = 0; i < N_ITENUM; i++) {
     let itmp = new Sprite(iteTexture[i]);
     item.push(itmp);
@@ -180,6 +191,7 @@ function setup() {
   p.pictnum = 0;
   p.frmcnt = 0;
   p.frm = 0;
+  p.item_get_num = 0;
   score_height = Math.floor(N_BYS-2 - (p.ly / 16));
 
   teki = new Sprite(tekiTexture);
@@ -411,8 +423,10 @@ function gPlay(delta) {
     if (x1 + 4 < itmp.lx+16 && x2 > itmp.lx &&
       p.ly +16 > itmp.ly && p.ly < itmp.ly + 16) {
       itmp.visible = false;
-      score += 100;
-      addmsg("You've got an item.");
+      p.item_get_num++;
+      titval = (p.item_get_num * 100);
+      score += titval;
+      addmsg("Fine. [" + titval + "pts.]");
       PIXI.sound.play('coin');
     }
   }
@@ -625,9 +639,9 @@ function build_map() {
       let val = true;
       let perc = 15;
       if (i >= (N_BYS * 2) / 3) {
-        prec = 20;
+        perc = 20;
       } else if (i <= (N_BYS * 1) / 3) {
-        prec = 10;
+        perc = 12;
       }
       if (rn0(100) < perc) {
         val = true;
@@ -641,8 +655,18 @@ function build_map() {
       if (i >= N_BYS - 1) {
         val = true;
         bidx_to_blo_xy(j, i, 1);
+      } else if (i >= N_BYS - 2) {
+        val = false;
+      } else if (i >= N_BYS - 3) {
+        val = false;
+      } else if (i >= N_BYS - 4) {
+        val = true;
+        bidx_to_blo_xy(j, i, 1);
       }
       blo[i][j].visible = val;
+    }
+    if (i >= N_BYS - 4) {
+      continue;
     }
     if (flgnoblo) {
       flgnoblocnt++;
