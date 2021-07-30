@@ -517,7 +517,7 @@ function drawTime(flg) {
   if (flg == 0) {
     clcText.text = 'T:' + tmp_minute + ':' + tmp_sec;
   } else {
-    let t_minute = Math.floor(theClock / 60) / 60;
+    let t_minute = Math.floor((theClock / 60) / 60);
     // let t_sec = Math.floor(theClock / 60)%60;
     let rank = 'D';
     if (t_minute < 1) {
