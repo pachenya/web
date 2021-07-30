@@ -324,6 +324,7 @@ function gEnding() {
   let tmp = ('00000' + String(score)).slice(-5);
   scoreText.text = 'Score: ' + tmp;
   msgText.visible = true;
+  drawTime(1);
 }
 
 let enderClock = 0;
@@ -505,11 +506,33 @@ function gPlay(delta) {
   scoreText.text = 'Score: ' + tmp;
 
   theClock++;
-  let tmp_minute = ('000' + String(Math.floor((theClock / 60)/60))).slice(-3);
-  let tmp_sec = ('00' + String(Math.floor(theClock / 60)%60)).slice(-2);
-  clcText.text = 'T:' + tmp_minute + ':' + tmp_sec;
+  drawTime(0);
   do_stars(1);
   do_msg();
+}
+
+function drawTime(flg) {
+  let tmp_minute = ('000' + String(Math.floor((theClock / 60)/60))).slice(-3);
+  let tmp_sec = ('00' + String(Math.floor(theClock / 60)%60)).slice(-2);
+  if (flg == 0) {
+    clcText.text = 'T:' + tmp_minute + ':' + tmp_sec;
+  } else {
+    let t_minute = Math.floor(theClock / 60) / 60;
+    // let t_sec = Math.floor(theClock / 60)%60;
+    let rank = 'D';
+    if (t_minute < 1) {
+      rank = 'SS';
+    } else if (t_minute == 1) {
+      rank = 'S';
+    } else if (t_minute < 3) {
+      rank = 'A';
+    } else if (t_minute < 5) {
+      rank = 'B';
+    } else {
+      rank = 'C';
+    }
+    clcText.text = 'T:' + tmp_minute + ':' + tmp_sec + ' Rank:' + rank;
+  }
 }
 
 function pjump(vx, vy) {
@@ -734,7 +757,7 @@ function gkFunc(e) {
     //   dprt('pCameraY: ' + Math.floor(pCameraY) + '; p.y: ' + Math.floor(p.y) + '; p.ly: ' + Math.floor(p.ly));
     //   break;
   }
-  dprt('keycode == ' + e.code);
+  // dprt('keycode == ' + e.code);
 }
 
 function isSma() {
