@@ -1,0 +1,56 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.clearfix {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+body {
+  font-size: 20pt;
+  color: white;
+  background-color: #222;
+  background-image: url('../wallp.png');
+  width: 100%;
+  /*margin: 1px auto 1px auto;*/
+  text-align: center;
+}
+
+#bgame {
+  color: white;
+  background: rgba(234, 0, 0, 0.4);
+  width: 82%;
+  margin: 0 auto;
+  text-align: left;
+}
+
+h1 {
+  color: white;
+  background-color: black;
+  padding: 3px;
+  margin: 0px;
+  text-align: center;
+}
+
+.btns {
+  color: antiquewhite;
+  background-color: crimson;
+  margin: 10px;
+  line-height: 40pt;
+  border: solid 2px red;
+}
+
+a {
+  color: yellow;
+}
+
+.musicbox {
+  font-size: 22pt;
+  border: solid 2px antiquewhite;
+  color: antiquewhite;
+  line-height: 40pt;
+  margin: 10px;
+}
