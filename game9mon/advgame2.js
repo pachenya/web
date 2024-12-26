@@ -4,7 +4,7 @@ function rnd(n) {
   return Math.floor(Math.random()*n);
 }
 
-function ads_aux(s1,s2,an) {
+function ads_aux(s1,s2,an,wfalseflag) {
   anw=1;
   if (rnd(2)==1) {
     addsele(an,s1);
@@ -13,11 +13,19 @@ function ads_aux(s1,s2,an) {
     addsele(anw,s2);
     addsele(an,s1);
   }
+  let sano="どちらともいえない";
+  if (wfalseflag) {
+    addsele(an,sano);
+  } else {
+    addsele(anw,sano);
+  }
 }
 
 async function aabbcc(v) {
+  let wfa=false;
 if (nowprt == 0) {
     clsele();
+
 switch(v) {
 case 0:prt("damii...");while(nowprt){await sleep(100);}
 addsele(1,"OK");break;case 1:prt("きみは奇妙な夢から目覚めた。");while(nowprt){await sleep(100);}
@@ -27,7 +35,7 @@ addsele(1,"OK");break;case 1:prt("きみは奇妙な夢から目覚めた。");w
     addsele(15,"奇妙な声が……");
   }
 break;case 2:prt("周りを見渡すと、これがまたよくある話で、きみは森の中にいる。...........");while(nowprt){await sleep(100);}
-addsele(3,"まさかだろ...");addsele(14,"まあいいや寝るか...");break;case 3:prt("「森の中ですわ〜！」");while(nowprt){await sleep(100);}
+addsele(3,"まさかだろ...");addsele(14,"まあいいや寝るか...");break;case 3:prt("「森の中だなあ...」");while(nowprt){await sleep(100);}
 addsele(4,"そんな。でも。");break;
 case 4:
   ingameflg=1;
@@ -37,71 +45,101 @@ addsele(1,"...");break;
   case 15:
     {
       let t01=rnd(4)+7;
-      let ans011=t01**t01;
-      let ans012=t01**t01;
+      let ans1=t01**t01;
+      let ans2=t01**t01;
+      let ans3=t01**t01+1;
       if (rnd(2)) {
-        ans012+=10;
+        ans2+=10;
       } else {
-        ans012-=10;
+        ans2-=10;
+      }
+      if (rnd(3)==0) {
+        wfa=true;
+        ans1=ans3;
       }
       prt("壱. "+t01+"の"+t01+"乗は？");
       while(nowprt){await sleep(100);}
-      ads_aux(String(ans011),String(ans012),16);
+      ads_aux(String(ans1),String(ans2),16,wfa);
     }
     break;
     case 16:
       {
       let t01=rnd(6)+13;
-      let ans011=t01**2;
-      let ans012=(t01+1)**2;
+      let ans1=t01**2;
+      let ans2=(t01+1)**2;
+      let ans3=(t01**2)+10;
+      if (rnd(3)==0) {
+        wfa=true;
+        ans1=ans3;
+      }
       prt("弐. "+t01+"の2乗は？");
       while(nowprt){await sleep(100);}
-      ads_aux(String(ans011),String(ans012),17);
+      ads_aux(String(ans1),String(ans2),17,wfa);
       }
       break;
     case 17:
       {
-      let t01=12345679,t2=(rnd(8)+1);
-      let ans011=t01*(t2*9);
-      let ans012=t01*(t2+1)*9;
+      let t01=12345679,t2=(rnd(7)+1);
+      let ans1=t01*(t2*9);
+      let ans2=t01*(t2+1)*9;
+      let ans3=t01*(t2+2)*9;
+      if (rnd(3)==0) {
+        wfa=true;
+        ans1=ans3;
+      }
       prt("参. "+t01+"かける"+(t2*9)+"は？");
       while(nowprt){await sleep(100);}
-      ads_aux(String(ans011),String(ans012),18);
+      ads_aux(String(ans1),String(ans2),18,wfa);
       }
       break;
     case 18:
       {
       let t01="四. "+ "「むかつく」とはどういうことか表しなさい。";
-      let ans011="知るか、テメーで考えろ！";
-      let ans012="Feel so good.";
+      let ans1="知るか、テメーで考えろ！";
+      let ans2="Feel so good.";
+      let ans3="気持ちいいです。";
+      if (rnd(3)==0) {
+        wfa=true;
+        ans1=ans3;
+      }
       prt(t01);
       while(nowprt){await sleep(100);}
-      ads_aux(String(ans011),String(ans012),19);
+      ads_aux(String(ans1),String(ans2),19,wfa);
       }
       break;
     case 19:
       {
       let t01="伍. √3914128969は？";
-      let ans011="62563";
-      let ans012="191919";
+      let ans1="62563";
+      let ans2="191919";
+      let ans3="62653";
+      if (rnd(3)==0) {
+        wfa=true;
+        ans1=ans3;
+      }
       prt(t01);
       while(nowprt){await sleep(100);}
-      ads_aux(String(ans011),String(ans012),20);
+      ads_aux(String(ans1),String(ans2),20,wfa);
       }
       break;
     case 20:
     {
       let t01=rnd(3)+12;
-      let ans011=t01**t01;
-      let ans012=t01**t01;
+      let ans1=t01**t01;
+      let ans2=t01**t01;
       if (rnd(2)) {
-        ans012+=10;
+        ans2+=10;
       } else {
-        ans012-=10;
+        ans2-=10;
+      }
+      let ans3=ans1+20;
+      if (rnd(3)==0) {
+        wfa=true;
+        ans1=ans3;
       }
       prt("六. "+t01+"の"+t01+"乗は？");
       while(nowprt){await sleep(100);}
-      ads_aux(String(ans011),String(ans012),21);
+      ads_aux(String(ans1),String(ans2),21,wfa);
     }
     break;
     case 21:
@@ -109,26 +147,31 @@ addsele(1,"...");break;
       let t01="七. ";
       let dicem=6;
       let dn=rnd(10)+5;
-      let ans011=(dicem+dicem*dn) / 2;
-      let ans012=(dicem+dicem*dn) / 2;
+      let ans1=(dicem+dicem*dn) / 2;
+      let ans2=(dicem+dicem*dn) / 2;
       if (rnd(2)) {
-        ans012+=2;
+        ans2+=2;
       } else {
-        ans012-=2;
+        ans2-=2;
+      }
+      let ans3=ans1+3;
+      if (rnd(3)==0) {
+        wfa=true;
+        ans1=ans3;
       }
       prt(t01+String(dicem)+"d"+String(dn)+"の期待値は？");
       while(nowprt){await sleep(100);}
-      ads_aux(String(ans011),String(ans012),22);
+      ads_aux(String(ans1),String(ans2),22,wfa);
       }
       break;
     case 22:
     {
       let t01=rnd(3)+12;
-      let ans011="3.141592653589793238462643383279502884197169...";
-      let ans012="3.141592653589793239462643383279502884297169...";
+      let ans1="3.141592653589793238462643383279502884197169...";
+      let ans2="3.141592653589793239462643383279502884297169...";
       prt("八. 円周率は？");
       while(nowprt){await sleep(100);}
-      ads_aux(String(ans011),String(ans012),23);
+      ads_aux(String(ans1),String(ans2),23,wfa);
     }
     break;
     case 23:
@@ -141,11 +184,11 @@ addsele(1,"...");break;
       } else {
         tnainn -=2;
       }
-      let ans011=tsikkusu + " / " + bai;
-      let ans012=tnainn  + " / " +  bai;
+      let ans1=tsikkusu + " / " + bai;
+      let ans2=tnainn  + " / " +  bai;
       prt("九. 究極の問いに対する究極の答えの一つ、愛の形は？");
       while(nowprt){await sleep(100);}
-      ads_aux(String(ans011),String(ans012),24);
+      ads_aux(String(ans1),String(ans2),24,wfa);
     }
     break;
     case 24:
@@ -162,10 +205,10 @@ addsele(1,"...");break;
         addsele(4242,"...")
       }
       break;
-case 4242:{prt("＊＊＊エンディング＊＊＊");while(nowprt){await sleep(100);}addsele(4242+1,".........")} break;case 4243:{prt("＊キャスト＊");while(nowprt){await sleep(100);}addsele(4243+1,".........")} break;case 4244:{prt("入れ墨の囚人：b42nd");while(nowprt){await sleep(100);}addsele(4244+1,".........")} break;case 4245:{prt("隊長：b42nd");while(nowprt){await sleep(100);}addsele(4245+1,".........")} break;case 4246:{prt("イギー：b42nd");while(nowprt){await sleep(100);}addsele(4246+1,".........")} break;case 4247:{prt("なますてまそ：b42nd");while(nowprt){await sleep(100);}addsele(4247+1,".........")} break;case 4248:{prt("ナマステマン：b42nd");while(nowprt){await sleep(100);}addsele(4248+1,".........")} break;case 4249:{prt("ビーンペーストブレッドパーソン：b42nd");while(nowprt){await sleep(100);}addsele(4249+1,".........")} break;case 4250:{prt("アンパン：b42nd");while(nowprt){await sleep(100);}addsele(4250+1,".........")} break;case 4251:{prt("クターストーン：b42nd");while(nowprt){await sleep(100);}addsele(4251+1,".........")} break;case 4252:{prt("＊脚本＊");while(nowprt){await sleep(100);}addsele(4252+1,".........")} break;case 4253:{prt("メインシナリオ：b42nd");while(nowprt){await sleep(100);}addsele(4253+1,".........")} break;case 4254:{prt("シナリオ：b42nd");while(nowprt){await sleep(100);}addsele(4254+1,".........")} break;case 4255:{prt("フライドシナリオ：b42nd");while(nowprt){await sleep(100);}addsele(4255+1,".........")} break;case 4256:{prt("フライド：b42nd");while(nowprt){await sleep(100);}addsele(4256+1,".........")} break;case 4257:{prt("サブシナリオ：b42nd");while(nowprt){await sleep(100);}addsele(4257+1,".........")} break;case 4258:{prt("脚色：b42nd");while(nowprt){await sleep(100);}addsele(4258+1,".........")} break;case 4259:{prt("タイピング：b42nd");while(nowprt){await sleep(100);}addsele(4259+1,".........")} break;case 4260:{prt("インプット：b42nd");while(nowprt){await sleep(100);}addsele(4260+1,".........")} break;case 4261:{prt("アイス：b42nd");while(nowprt){await sleep(100);}addsele(4261+1,".........")} break;case 4262:{prt("ホッターマンやりたい：b42nd");while(nowprt){await sleep(100);}addsele(4262+1,".........")} break;case 4263:{prt("チョコミントアイス：b42nd");while(nowprt){await sleep(100);}addsele(4263+1,".........")} break;case 4264:{prt("ジャモカアーモンドファッジ：b42nd");while(nowprt){await sleep(100);}addsele(4264+1,".........")} break;case 4265:{prt("ヴァニラ・アイス：b42nd");while(nowprt){await sleep(100);}addsele(4265+1,".........")} break;case 4266:{prt("＊スタッフ＊");while(nowprt){await sleep(100);}addsele(4266+1,".........")} break;case 4267:{prt("アニマルトレイナー：b42nd");while(nowprt){await sleep(100);}addsele(4267+1,".........")} break;case 4268:{prt("モンハンアディクト：b42nd");while(nowprt){await sleep(100);}addsele(4268+1,".........")} break;case 4269:{prt("シレン６プレイヤー：b42nd");while(nowprt){await sleep(100);}addsele(4269+1,".........")} break;case 4270:{prt("Androidユーザー：b42nd");while(nowprt){await sleep(100);}addsele(4270+1,".........")} break;case 4271:{prt("蕎麦イーター：b42nd");while(nowprt){await sleep(100);}addsele(4271+1,".........")} break;case 4272:{prt("デバッグ：b42nd");while(nowprt){await sleep(100);}addsele(4272+1,".........")} break;case 4273:{prt("デバッグ補佐：b42nd");while(nowprt){await sleep(100);}addsele(4273+1,".........")} break;case 4274:{prt("人間凶器：b42nd");while(nowprt){await sleep(100);}addsele(4274+1,".........")} break;case 4275:{prt("伝説の人工無脳：b42nd");while(nowprt){await sleep(100);}addsele(4275+1,".........")} break;case 4276:{prt("テストプレイヤー：b42nd");while(nowprt){await sleep(100);}addsele(4276+1,".........")} break;case 4277:{prt("将棋監修：b42nd");while(nowprt){await sleep(100);}addsele(4277+1,".........")} break;case 4278:{prt("時代考証監修：b42nd");while(nowprt){await sleep(100);}addsele(4278+1,".........")} break;case 4279:{prt("アイス監修：b42nd");while(nowprt){await sleep(100);}addsele(4279+1,".........")} break;case 4280:{prt("キリ番ゲット：b42nd");while(nowprt){await sleep(100);}addsele(4280+1,".........")} break;case 4281:{prt("ドノヴァン使い：b42nd");while(nowprt){await sleep(100);}addsele(4281+1,".........")} break;case 4282:{prt("ドランク：b42nd");while(nowprt){await sleep(100);}addsele(4282+1,".........")} break;case 4283:{prt("タイムウェイスター：b42nd");while(nowprt){await sleep(100);}addsele(4283+1,".........")} break;case 4284:{prt("プログラム：b42nd");while(nowprt){await sleep(100);}addsele(4284+1,".........")} break;case 4285:{prt("(※このゲームの制作において、いかなる自然界の動物も傷つけられてはいません)");while(nowprt){await sleep(100);}addsele(4285+1,".........")} break;case 4286:{prt("Thank you for playing!");while(nowprt){await sleep(100);}addsele(4286+1,".........")} break;case 4287:{prt("企画：b42nd");while(nowprt){await sleep(100);}addsele(4287+1,".........")} break;case 4288:{prt("制作：b42nd");while(nowprt){await sleep(100);}addsele(4288+1,".........")} break;case 4289:{prt("企画制作：b42nd");while(nowprt){await sleep(100);}addsele(4289+1,".........")} break;case 4290:{prt("監督：Aki Kuhid");while(nowprt){await sleep(100);}addsele(4290+1,".........")} break;
+case 4242:{prt("＊＊＊エンディング＊＊＊");while(nowprt){await sleep(100);}addsele(4242+1,".........")} break;case 4243:{prt("＊キャスト＊");while(nowprt){await sleep(100);}addsele(4243+1,".........")} break;case 4244:{prt("バッドマン：b42nd");while(nowprt){await sleep(100);}addsele(4244+1,".........")} break;case 4245:{prt("隊長：b42nd");while(nowprt){await sleep(100);}addsele(4245+1,".........")} break;case 4246:{prt("イギー：b42nd");while(nowprt){await sleep(100);}addsele(4246+1,".........")} break;case 4247:{prt("なますてまそ：b42nd");while(nowprt){await sleep(100);}addsele(4247+1,".........")} break;case 4248:{prt("ナマステマン：b42nd");while(nowprt){await sleep(100);}addsele(4248+1,".........")} break;case 4249:{prt("ビーンペーストブレッドパーソン：b42nd");while(nowprt){await sleep(100);}addsele(4249+1,".........")} break;case 4250:{prt("アンパン：b42nd");while(nowprt){await sleep(100);}addsele(4250+1,".........")} break;case 4251:{prt("クターストーン：b42nd");while(nowprt){await sleep(100);}addsele(4251+1,".........")} break;case 4252:{prt("＊脚本＊");while(nowprt){await sleep(100);}addsele(4252+1,".........")} break;case 4253:{prt("メインシナリオ：b42nd");while(nowprt){await sleep(100);}addsele(4253+1,".........")} break;case 4254:{prt("シナリオ：b42nd");while(nowprt){await sleep(100);}addsele(4254+1,".........")} break;case 4255:{prt("フライドシナリオ：b42nd");while(nowprt){await sleep(100);}addsele(4255+1,".........")} break;case 4256:{prt("フライド：b42nd");while(nowprt){await sleep(100);}addsele(4256+1,".........")} break;case 4257:{prt("サブシナリオ：b42nd");while(nowprt){await sleep(100);}addsele(4257+1,".........")} break;case 4258:{prt("脚色：b42nd");while(nowprt){await sleep(100);}addsele(4258+1,".........")} break;case 4259:{prt("タイピング：b42nd");while(nowprt){await sleep(100);}addsele(4259+1,".........")} break;case 4260:{prt("インプット：b42nd");while(nowprt){await sleep(100);}addsele(4260+1,".........")} break;case 4261:{prt("アイス：b42nd");while(nowprt){await sleep(100);}addsele(4261+1,".........")} break;case 4262:{prt("ホッターマンていうファミコンソフトやりたい：b42nd");while(nowprt){await sleep(100);}addsele(4262+1,".........")} break;case 4263:{prt("チョコミントアイス：b42nd");while(nowprt){await sleep(100);}addsele(4263+1,".........")} break;case 4264:{prt("ジャモカアーモンドファッジ：b42nd");while(nowprt){await sleep(100);}addsele(4264+1,".........")} break;case 4265:{prt("ヴァニラ・アイス：b42nd");while(nowprt){await sleep(100);}addsele(4265+1,".........")} break;case 4266:{prt("＊スタッフ＊");while(nowprt){await sleep(100);}addsele(4266+1,".........")} break;case 4267:{prt("アニマルトレイナー：b42nd");while(nowprt){await sleep(100);}addsele(4267+1,".........")} break;case 4268:{prt("モンハンアディクト：b42nd");while(nowprt){await sleep(100);}addsele(4268+1,".........")} break;case 4269:{prt("シレン６プレイヤー：b42nd");while(nowprt){await sleep(100);}addsele(4269+1,".........")} break;case 4270:{prt("Androidユーザー：b42nd");while(nowprt){await sleep(100);}addsele(4270+1,".........")} break;case 4271:{prt("蕎麦イーター：b42nd");while(nowprt){await sleep(100);}addsele(4271+1,".........")} break;case 4272:{prt("デバッグ：b42nd");while(nowprt){await sleep(100);}addsele(4272+1,".........")} break;case 4273:{prt("デバッグ補佐：b42nd");while(nowprt){await sleep(100);}addsele(4273+1,".........")} break;case 4274:{prt("人間凶器：b42nd");while(nowprt){await sleep(100);}addsele(4274+1,".........")} break;case 4275:{prt("伝説の人工無脳：b42nd");while(nowprt){await sleep(100);}addsele(4275+1,".........")} break;case 4276:{prt("テストプレイヤー：b42nd");while(nowprt){await sleep(100);}addsele(4276+1,".........")} break;case 4277:{prt("将棋監修：b42nd");while(nowprt){await sleep(100);}addsele(4277+1,".........")} break;case 4278:{prt("時代考証監修：b42nd");while(nowprt){await sleep(100);}addsele(4278+1,".........")} break;case 4279:{prt("アイス監修：b42nd");while(nowprt){await sleep(100);}addsele(4279+1,".........")} break;case 4280:{prt("キリ番ゲット：b42nd");while(nowprt){await sleep(100);}addsele(4280+1,".........")} break;case 4281:{prt("ドノヴァン使い：b42nd");while(nowprt){await sleep(100);}addsele(4281+1,".........")} break;case 4282:{prt("ドランク：b42nd");while(nowprt){await sleep(100);}addsele(4282+1,".........")} break;case 4283:{prt("タイムウェイスター：b42nd");while(nowprt){await sleep(100);}addsele(4283+1,".........")} break;case 4284:{prt("プログラム：b42nd");while(nowprt){await sleep(100);}addsele(4284+1,".........")} break;case 4285:{prt("(※このゲームの制作において、いかなる自然界の動物も傷つけられてはいません)");while(nowprt){await sleep(100);}addsele(4285+1,".........")} break;case 4286:{prt("Thank you for playing!");while(nowprt){await sleep(100);}addsele(4286+1,".........")} break;case 4287:{prt("企画：b42nd");while(nowprt){await sleep(100);}addsele(4287+1,".........")} break;case 4288:{prt("制作：b42nd");while(nowprt){await sleep(100);}addsele(4288+1,".........")} break;case 4289:{prt("企画制作：b42nd");while(nowprt){await sleep(100);}addsele(4289+1,".........")} break;case 4290:{prt("監督：Aki Kuhid");while(nowprt){await sleep(100);}addsele(4290+1,".........")} break;
 
 default:
-  prt("「森の中ですわ〜！」");while(nowprt){await sleep(100);}
+  prt("「森の中だなあ」");while(nowprt){await sleep(100);}
   addsele(14,"まだ寝てたいな")
 break;
 }
