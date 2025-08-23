@@ -1,0 +1,371 @@
+<html><head>
+  <meta http-equiv="content-type" content="text/html; charset=Shift_JIS">
+  <title>ガガスバンダス非公式ホームページ</title>
+  <script language="JavaScript" src="insu.js"></script>
+<style type="text/css">
+<!--
+body {
+ margin: 0;
+ color: #404040;
+ background-color: #fff;
+ background-image: url(futta1381.jpg);
+ background-attachment: fixed;
+ color: #fafafa;
+}
+a {
+ text-decoration: underline;
+ font-weight: bold;
+ color: rgb(230,200,120);
+}
+.fakelink {
+ text-decoration: underline;
+ font-weight: bold;
+ color: rgb(230,200,120);
+ cursor: pointer;
+}
+h1 {
+ margin: 0;
+ width: 640px;
+ height: 300px;
+ background-image: url(gagasu_title.png);
+ background-repeat: no-repeat;
+}
+h1.cl_title span{
+ display: none;
+}
+.body_container {
+ text-align: center;
+}
+.contentbody {
+ position:relative;
+ margin:0 auto;
+ width:640px;
+ background-color: #633;
+ font: normal normal normal small 'MS UI Gothic';
+}
+.newscont {
+ margin: 5px;
+ text-align: left;
+ border: 1px solid #ccc;
+ color: #fafafa;
+ background-color: #a88;
+}
+.menubar {
+ margin: 2px 2px 1px 4px;
+ text-align: left;
+}
+.c_gaimgs {
+ display: none;
+}
+h2 {
+ padding-left: 5px;
+ border: 1px;
+ border-style: none none solid none;
+}
+p {
+ margin-left: 15px;
+ font-size: small;
+}
+td {
+ font-size: small;
+}
+-->
+</style>
+<script language="JavaScript">
+<!--
+var randstrs = "ザクシャインラブ:ガスバーナー:クルズククルズップ:マグロマル:ズンドコベロンチョ:ガガスバンダス:ドラゴンレッド".split(":");
+nowidx = 0;
+nowstr = randstrs[0];
+
+window.setTimeout("show_gagasu_img()" , 10000);
+
+window.setTimeout("set_gagasu_str()" , 15000);
+
+ img1 = new Image(40, 40);
+ img1.src = "ga.gif";
+
+function show_gagasu_img()
+{
+ var otmp = document.getElementsByName("n_gaimgs");
+ for(i=0;i<otmp.length;i++)
+ {
+  otmp[i].style.display = "inline";
+ }
+}
+
+function randint0(n)
+{
+ return Math.floor(Math.random() * n);
+}
+
+function set_gagasu_bbs()
+{
+ var bbsdz = document.getElementsByName("bbs_day");
+ var bbstz = document.getElementsByName("bbs_title");
+ var bbsuz = document.getElementsByName("bbs_username");
+ strtitles = '【バグ】虫が正しくない:【バグ】とれちゃった:【バグ】大切な小動物が食べられなくなる:【攻略】片手盾スレpart107:睡眠不足:黒い銀河を何で炊くか:ジャンプ小パンチ:【バグ】城から悪臭がする:【攻略】スク水:ポエムスレ:【勝利報告】おはようございます:【攻略】笑顔縛り:ver 4.0.4での変更点:【攻略】何で炊く？:【バグ】スキエガで延髄が麻痺する:<span name="gagasu_str">ガガスバンダス</span>のBGM'.split(":"); strusers = "toshikyunnn:PoniTa444:Ondori515:anonymgontaman:anonymgontaman:muhcham:IAramaki:sg_urei".split(":");
+ tmpusednum = new Array(-1,-1,-1,-1,-1,-1,-1);
+
+ for(i=0;i<bbsdz.length;i++)
+ {
+  tmpday = ("0"+(randint0(12)+1)).slice(-2) + "/" + ("0"+(randint0(32)+1)).slice(-2);
+  bbsdz[i].innerHTML = tmpday;
+  
+  while(1)
+  {
+   tmptitleidx = randint0(strtitles.length);
+   sameflag = 0;
+   for(j=0;j<6;j++)
+   {
+    if (tmptitleidx == tmpusednum[j])
+    {
+     sameflag = 1;
+     break;
+    }
+   }
+   if (!sameflag) break;
+  }
+  tmpusednum[i] = tmptitleidx;
+  if (randint0(7) < 1)
+  {
+   tmpinsustr = taunt0() + " " + taunt1() + taunt2() + taunt3();
+   bbstz[i].innerHTML = tmpinsustr;
+   bbsuz[i].innerHTML = tauntname();
+  }
+  else
+  {
+   bbstz[i].innerHTML = strtitles[tmptitleidx];
+   bbsuz[i].innerHTML = strusers[randint0(strusers.length)];
+  }
+ }
+}
+
+bbsmawasu_atai = 14000;
+
+window.setTimeout("gagasu_bbs_mawasu()" , bbsmawasu_atai);
+
+function gagasu_bbs_mawasu()
+{
+  set_gagasu_bbs();
+  window.setTimeout("gagasu_bbs_mawasu()" , bbsmawasu_atai);
+  bbsmawasu_atai -= 2000;
+  if (bbsmawasu_atai < 5000)
+  {
+   bbsmawasu_atai = 5000;
+  }
+}
+
+
+function set_gagasu_str()
+{
+ nowstr = randstrs[nowidx];
+ var otmp = document.getElementsByName("gagasu_str");
+ document.title = nowstr + "非公式ホームページ";
+ for(i=0;i<otmp.length;i++)
+ {
+  otmp[i].innerHTML = nowstr;
+ }
+
+ nowidx++;
+ if (nowidx >= randstrs.length)
+ {
+  nowidx = 0;
+ }
+ nowstr = randstrs[nowidx];
+
+ //document.getElementById("the_botan").value = nowstr;
+ 
+ window.setTimeout("set_gagasu_str()" , 15000);
+}
+
+xx = 400;
+yy = -32;
+cnt = 0;
+
+function mouse_D(event,v)
+{
+/*
+ if(document.all)
+ {
+  dx = window.event.offsetX;
+  dy = window.event.offsetY;
+ }
+ else if (document.layers || document.getElementById)
+ {
+  dx = event.layerX;
+  dy = event.layerY;
+ }
+ */
+ otmp = document.all[v];
+ if (otmp)
+ {
+  tmpx = parseInt(otmp.style.left);
+  tmpy = parseInt(otmp.style.top);
+  widtmp = 16;
+  addx = 0;
+  addy = 0;
+  if (randint0(2))
+  {
+   addx = randint0(2) ? widtmp : -widtmp;
+  }
+  else
+  {
+   addy = randint0(2) ? widtmp : -widtmp;
+  }
+  nx = tmpx + addx;
+  ny = tmpy + addy;
+  if (nx < 0 || nx > 640) { addx *= -1; }
+  if (ny < 0 || ny > 1000) { addy *= -1; }
+  nx = tmpx + addx;
+  ny = tmpy + addy;
+  otmp.style.left = nx;
+  otmp.style.top  = ny;
+ }
+ if (v == 'img_a')
+ {
+	xx += addx;
+	yy += addy;
+ }
+}
+
+function auto_anime(v)
+{
+ cnt++;
+ nx = xx + Math.sin(cnt*0.03) * 20;
+ ny = yy + Math.sin(cnt*0.05) * 10;
+ if (yy < 480)
+ {
+  yy += 0.2;
+ }
+ otmp = document.all[v];
+ if (cnt % 500 < 420)
+ {
+  otmp.style.display = "none";
+ }
+ else
+ {
+  otmp.style.display = "inline";
+  otmp.style.left = nx;
+  otmp.style.top = ny;
+ }
+}
+
+setInterval("auto_anime('img_a')", 20);
+ -->
+</script>
+</head>
+<body>
+<div class="body_container">
+<div class="contentbody">
+ <h1 class="cl_title"><span><span name="gagasu_str">ガガスバンダス</span>非公式ホームページ</span></h1>
+ 
+  <div class="menubar">
+   <a href="404.html">ABOUT</a> |
+   <a href="404.html">NEWS</a> |
+   <a href="404.html">SCREEN SHOTS</a> |
+   <a href="404.html">DOWNLOAD</a> |
+   <a href="404.html">FORUM</a> |
+   <a href="404.html">FAQ</a> |
+  </div>
+
+  <!-- 
+  <input type="button" value="test" onclick="show_gagasu_img()"><br>
+   -->
+  
+  <div class="newscont">
+   <h2>ようこそ、<span name="gagasu_str">ガガスバンダス</span>の世界へ！</h2>
+   <p>このホームページは<span name="gagasu_str">ガガスバンダス</span>の非公式ホームページです。<span name="gagasu_str">ガガスバンダス</span>の配給と非公式海造版『ガガスバタンズ』の解釈をしています。<br>
+   <h2><span name="gagasu_str">ガガスバンダス</span>について</h2>
+   <p><img src="futta1305s.jpg"><br>
+   <p><span name="gagasu_str">ガガスバンダス</span>はとても長い歴史を持ち、現在の形になるまでには数え切れないほどの人が関わっています。生の<span name="gagasu_str">ガガスバンダス</span>は<b>上図</b>のように見えます。<br>
+   <p>最初のバージョンは救急車にインスパイアされた<b>消防車</b>（1970年代後半～）をもとに作られました。アンドリュー・ハリソンの初代消防車が、バンダズ・タンによって<b><span name="gagasu_str">ガガスバンダス</span></b>へと再創造され、現在の<b>炊き</b>を重視したスタイルは1998年に完成しました。<br>
+   <p><span name="gagasu_str">ガガスバンダス</span>は炊きで全てが決まるとまで言われるようになりました。何で何を炊くか、その組み合わせは無限です。初心者は<span name="gagasu_str">ガガスバンダス</span>を仕込むことを考えるだけでその奥深さに眩暈がしてしまうことでしょう。<span name="gagasu_str">ガガスバンダス</span>は気軽に炊けるものでもありますが、数学的な複雑さも無視できません。<br>
+   <p>とりあえず興味を持ったのなら、まずは<b><span name="gagasu_str">ガガスバンダス</span></b>から始めるか<span name="gagasu_str">ガガスバンダス</span>から始めるかのどちらかが良いでしょう。掲示板ではさまざまな炊きが試されています。ぜひあなたも<span name="gagasu_str">ガガスバンダス</span>を共有してみてください。<br>
+   <h2>ライセンス</h2>
+   <p><span name="gagasu_str">ガガスバンダス</span>はGPRではありません。<span name="gagasu_str">ガガスバンダス</span>は　１．以下のライセンスを変更しないこと　２．以下のライセンスを含めることの二つの条件を守れば自由に改変および再配布することができます。<br>
+   <p><span name="gagasu_str">ガガスバンダス</span>を使用したことにより起きる損害について、我々は一切責任を負わないものとします。<br>
+   <h2>掲示板でアクティブなスレッド</h2>
+   <p>
+   <table>
+    <tr>
+     <td><span name="bbs_day">08/32</span></td>
+     <td><span class="fakelink"><span name="bbs_title">【バグ】スキエガで延髄が麻痺する</span></span></td>
+     <td><span name="bbs_username">muhcham</span></td>
+    </tr>
+    <tr>
+     <td><span name="bbs_day">03/17</span></td>
+     <td><span class="fakelink"><span name="bbs_title">【攻略】何で炊く？</span></span></td>
+     <td><span name="bbs_username">anonymgontaman</span></td>
+    </tr>
+    <tr>
+     <td><span name="bbs_day">03/15</span></td>
+     <td><span class="fakelink"><span name="bbs_title"><span name="gagasu_str">ガガスバンダス</span>のBGM</span></span></td>
+     <td><span name="bbs_username">Ondori515</span></td>
+    </tr>
+    <tr>
+     <td><span name="bbs_day">02/30</span></td>
+     <td><span class="fakelink"><span name="bbs_title">【バグ】大切な小動物が降りてこなくなる</span></span></td>
+     <td><span name="bbs_username">PoniTa444</span></td>
+    </tr>
+    <tr>
+     <td><span name="bbs_day">01/03</span></td>
+     <td><span class="fakelink"><span name="bbs_title">ver 4.0.2での変更点</span></span></td>
+     <td><span name="bbs_username">toshikyunnn</span></td>
+    </tr>
+   </table>
+   <p><span class="fakelink">掲示板へ＞＞</span><br>
+  </div>
+  
+  <!--
+   <input type="button" value="test" onclick="set_gagasu_bbs()"><br>
+   -->
+
+ <div style="text-align: left; padding: 9px; font-size: x-small; color: #a88;">カウンタ : <span style="color: #fff;">19999</span><br>
+ </div>
+</div>
+<p>
+</div><!-- body_container -->
+<div style="text-align: center;"><a href="../index.html">top page</a></div>
+<div class="c_gaimgs" name="n_gaimgs" id="img_a" style="position:absolute; top: -20px;">
+<span name="gagasu_str">ガガスバンダス</span><!--<img src="ga.gif">-->
+</div>
+<div class="c_gaimgs" name="n_gaimgs" id="img_b" style="position:absolute;
+top : 190px;
+left : 616px;
+width : 16px;
+height : 16px;" onmousemove="mouse_D(event,'img_b');return false">
+<img src="ga.gif"></div>
+<div class="c_gaimgs" name="n_gaimgs" id="img_c" style="position:absolute;
+top : 190px;
+left : 616px;
+width : 16px;
+height : 16px;" onmousemove="mouse_D(event,'img_c');return false">
+<img src="ga.gif"></div>
+<div class="c_gaimgs" name="n_gaimgs" id="img_d" style="position:absolute;
+top : 190px;
+left : 616px;
+width : 16px;
+height : 16px;" onmousemove="mouse_D(event,'img_d');return false">
+<img src="ga.gif"></div>
+<div class="c_gaimgs" name="n_gaimgs" id="img_e" style="position:absolute;
+top : 190px;
+left : 616px;
+width : 16px;
+height : 16px;" onmousemove="mouse_D(event,'img_e');return false">
+<img src="ga.gif"></div>
+<div class="c_gaimgs" name="n_gaimgs" id="img_f" style="position:absolute;
+top : 190px;
+left : 616px;
+width : 16px;
+height : 16px;" onmousemove="mouse_D(event,'img_f');return false">
+<img src="ga.gif"></div>
+<div class="c_gaimgs" name="n_gaimgs" id="img_g" style="position:absolute;
+top : 190px;
+left : 616px;
+width : 16px;
+height : 16px;" onmousemove="mouse_D(event,'img_g');return false">
+<img src="ga.gif"></div>
+<br>
+<br>
+
+</body>
